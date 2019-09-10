@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>UK2017</title>
+    <meta charset="utf-8">
+    <meta name="description" content="Visualizations from data analysis on UK Elections 2017">
+    <meta name="robots" content="index, follow"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="author" content="Laaposto">
+
+    <link rel="shortcut icon" href="imgs/favicon.ico"/>
+
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,700|Roboto+Slab:400,300,700&amp;subset=latin,cyrillic-ext,greek-ext,greek,latin-ext,cyrillic"
+          rel="stylesheet" type="text/css">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/main.css">
+    <!--END CSS -->
+
+</head>
+<body>
+<section class="first-section">
+    <div class="header_menu">
+        <img src="imgs/logo.png" alt="logo" class="logo">
+
+        <h2 class="header">UK Elections 2017</h2>
+        <ul id="mainmenu" class="right">
+            <li><a onclick="window.location='index.html'+window.location.search;">Trends</a></li>
+            <li><a onclick="window.location='about.html'+window.location.search;">About</a></li>
+        </ul>
+    </div>
+</section>
+<article class="titlecontainer">
+    <div class="pagetitlewrap">
+        <h1 class="pagetitle">About</h1>
+    </div>
+    <div class="clear"></div>
+    <div class="maincontent">
+        <p><strong>Data Collection and Sampling</strong></p>
+
+        <p>We collected a corpus of tweets about the 2017 UK general election through Twitter’s streaming API, tracking
+            14 <a href="#hashtags" aria-describedby="footnote-label" id="hashtags-ref">hashtags</a>. Data harvesting was
+            performed between 26th May and 21st June 2017 to capture the ongoing
+            discussion in the 2 weeks running up to the election and then the two week post-election period. In order to
+            identify relevant topic-entities in each tweet, we match tweets against two manually curated lists of
+            keywords (both were created during the 2015 UK election cycle). The following include:</p>
+        <ul>
+            <li>A list of 438 topic keywords relevant to 9 popular election <a href="#issues"
+                                                                               aria-describedby="footnote-label"
+                                                                               id="issues-ref">issues</a>. The initial
+                list of 420 seed words
+                provided by a team of journalists was augmented by searching for similar words within a vector space on
+                the basis of cosine similarity.
+            </li>
+            <li>A list of 71 political-party names relevant to 9 political parties such as “tories” and “lib dems”.</li>
+        </ul>
+        <p>In the resulting corpus each tweet contains at least one keyword (i.e. topic-entity) from the two lists
+            above. To make sure we have a high quality low noise corpus, we have trained a Twitter spam detection model
+            using the data and user features described in [1] and filtered out those that are identified as spam tweets
+            by the model.</p>
+
+        <p><strong>Sentiment Classification</strong></p>
+
+        <p>An early study by [2] showed that 40% of Twitter sentiment classification errors are caused by using
+            tweet-level approaches that are independent of the target/topic entities. Here we go beyond of tweet-level
+            approaches and adopt the multi-target-specific approach proposed in [3], which finds the syntactically
+            connected parts of a tweet to each topic-entity and then extracts word embedding features from these
+            syntactically dependent tokens in order to calculate the sentiment. It was shown to obtain state-of-the-art
+            performance in two data sets. Each topic-entity instance is classified as ‘negative’, ‘positive’ or
+            ‘neutral’.</p>
+
+        <p><strong>Tweet Summarisation</strong></p>
+
+        <p>Here we extract a list of representative tweets summarising the sentiment(s) expressed towards each topic
+            entity at each day (e.g. tweets containing positive sentiment towards ‘green party’ posted at 26th May
+            2017).
+            As a prerequisite for summarisation, we further group tweets containing the same sentiment towards a topic
+            or entity on each day into a number of clusters, with each cluster presumably representing a theme or
+            reasons surrounding the particular choice of sentiment. We adopt the
+            two-stage hierarchical topic modelling approach proposed in [4] and select the GSDMM+OLDA model for this
+            task. If there are fewer than 10 unique tweets containing the same sentiment towards a topic entity on a
+            particular day, we skip the tweet clustering step and treat these tweets as one cluster.
+            To extract representative tweets for summarising each cluster, we place every tweet in one common embedding
+            space and find 20 tweets that are the closest to the cluster centroid (also known as metroid tweets) as
+            summary candidates. We select the most informative tweet from the 20 candidates as the summary for that
+            cluster, and the final summary for the sentiment expressed towards the topic entity is the summaries
+            combined from all its clusters (e.g. tweets containing positive sentiment towards ‘green party’ posted on
+            26th May 2017, comprise 8 clusters and therefore a list of 8 representative tweets as their summary).
+        </p>
+
+        <p><strong>References:</strong></p>
+
+        <p>[1] B. Wang, A. Zubiaga, M. Liakata, and R. Procter. Making the Most of Tweet-inherent Features for Social
+            Spam Detection on Twitter. Workshop on Making Sense of Microposts (# Microposts2015) WWW, 1395:10–16,
+            2015.<br><br>
+
+            [2] Long Jiang, Mo Yu, Ming Zhou, Xiaohua Liu, and Tiejun Zhao. Target-dependent twitter sentiment
+            classification. In Proceedings of the 49th Annual Meeting of the Association for Computational Linguistics
+            (ACL). 2011.<br><br>
+
+            [3] B. Wang, M. Liakata, A. Zubiaga, and R. Procter. TDParse: multi-target-specific Sentiment Recognition on
+            Twitter. The 15th Conference of the European Chapter of the Association for Computational Linguistics, 3-7
+            April, 2017.<br><br>
+
+            [4] B. Wang, M. Liakata, A. Zubiaga, and R. Procter. A Hierarchical Topic Modelling Approach for Tweet
+            Clustering. The 9th International Conference on Social Informatics (SocInfo). 2017.
+        </p>
+    </div>
+    <footer>
+        <h2 class="visually-hidden" id="footnote-label">Footnotes</h2>
+        <ol>
+            <li id="hashtags">#ukelection2017, #ge2017, #ge17, #ukge2017, #ukgeneralelection2017, #bbcqt, #bbcdp,
+                #marrshow, #generalelection2017, #generalelection, #electionuk, #ukelection and #electionuk2017 <a
+                        href="#hashtags-ref" aria-label="Back to content">↩</a></li>
+
+            <li id="issues">EU and immigration, economy, NHS, education, crime, housing, defense, public spending,
+                environment and energy <a href="#issues-ref" aria-label="Back to content">↩</a></li>
+        </ol>
+    </footer>
+</article>
+</body>
+</html>
