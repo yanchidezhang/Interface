@@ -1,6 +1,4 @@
 # Interface
-Interface for visualization
-
 Hi there, I am Yanchi. The interface for visualizing the resulting 2017 UK election dataset is maintained in this repository. You can download it and check the visualization result on your device by following the instruction below.
 
 ## Prerequisite 
