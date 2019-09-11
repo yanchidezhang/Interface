@@ -10,12 +10,12 @@ Click the 'clone' button and download the repository as .zip file. Unzip the fil
 In the terminal, enter the \uk2017 directory, and type the python commands below:
 
 if you are using python 2:
-'''
+'''python
 python2 -m SimpleHTTPServer
 '''
 
 if you are using python 3:
 
-'''
+'''python
 python3 -m http.server
 '''
